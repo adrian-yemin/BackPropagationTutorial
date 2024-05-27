@@ -3,7 +3,7 @@ import copy
 import random
 
 
-# The main neural network class
+# The main neural network of the class
 class Network:
     # main constructor
     def __init__(self, numInputs, numNeuronsPerLayer, actFunctionForLayer):
