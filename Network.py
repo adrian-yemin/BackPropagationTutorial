@@ -27,7 +27,7 @@ class Network:
     def RandomizeAll(self):
         # random.seed(0) #Only set a seed if needed for debugging
         for i in range(0, self.LayerNum):
-            if (i == (self.LayerNum - 1)):  # Last layer must be handled differently
+            if i == (self.LayerNum - 1):  # Last layer must be handled differently
                 self.Layers[i].RandomizeLayerWeights(1, random)  # Each neuron in the layer is directly used so fanout=1
                 self.Layers[i].RandomizeLayerBias(random)
             else:

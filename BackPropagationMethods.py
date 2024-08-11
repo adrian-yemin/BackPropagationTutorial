@@ -67,7 +67,7 @@ class BackPropagationMethods():
     @staticmethod
     def GenerateEmptyJBHolder(net):
         EmptyJBHolder = []
-        for i in reversed(range(net.LayerNum)):
+        for i in range(net.LayerNum):
             matrixJBForLayer = numpy.zeros(shape=(net.Layers[i].NumNeurons, 1))
             EmptyJBHolder.append(matrixJBForLayer)
         return EmptyJBHolder
@@ -95,7 +95,10 @@ class BackPropagationMethods():
             # Output layer is handled differently than the rest
             if i == (net.LayerNum - 1):
                 aPrime = net.Layers[net.LayerNum - 1].OutputPrime()
-                delta.append(-(y - output) * aPrime)
+                for i in range(len(aPrime)):
+                    for j in range(len(aPrime[i])):
+                        aPrime[i][j] *= -(y[i] - output[i][j])
+                delta.append(aPrime)
                 # Don't update the delta index for the first time
             else:
                 currentWeights = net.Layers[i + 1].GetWMatrix()  # Get weights from the i+1 layer (one layer ahead)
@@ -127,6 +130,11 @@ class BackPropagationMethods():
                 currentNeuron = currentLayer.NeuronArray[j]
                 for i in range(0, currentNeuron.WeightNum):
                     output = previousLayer.NeuronArray[i].A if k > 0 else input[i][0]
+                    # if k > 0:
+                    #     output = previousLayer.NeuronArray[i].A
+                    # else:
+                    #     temp = input[i]
+                    #     output = input[i][0]
                     currentJW[k][j][i] = deltas[k][j][0] * output
         return currentJW
 
