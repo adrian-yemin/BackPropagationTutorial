@@ -15,7 +15,7 @@ class Network:
         for i in range(1, self.LayerNum):
             currentL = Layer(self.Layers[i - 1].NumNeurons, numNeuronsPerLayer[i], actFunctionForLayer[i])
             self.Layers.append(currentL)
-        # self.RandomizeAll() #Randomize all the weights and biases of the network
+        self.RandomizeAll()  # Randomize all the weights and biases of the network
 
     def Output(self, input):
         currentOut = self.Layers[0].Output(input)
