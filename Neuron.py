@@ -18,7 +18,7 @@ class Neuron():
         z = 0.0
         self.APrime = 0.0
         for i in range(0, self.WeightNum):  # Sum the weighted inputs
-            z += input[i] * self.Weights[i]
+            z += input[i][0] * self.Weights[i]
         z += self.Bias
         self.A = self.ActivationFunction.Output(z)  # Apply the activation function
         self.APrime = self.ActivationFunction.OutputPrime(z)  # Compute derivative
