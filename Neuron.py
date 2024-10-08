@@ -4,7 +4,7 @@ from SigmoidActivation import SigmoidActivation
 import math
 
 
-class Neuron():
+class Neuron:
     def __init__(self, numInputs, actFunction):
         self.Weights = numpy.empty(numInputs, dtype=float)  # Define the weights for the neuron
         self.WeightNum = len(self.Weights)  # Variable to check the number of connections(weights) the neuron has

@@ -18,32 +18,49 @@ for i in range(len(X_list)):
     X_list[i] = numpy.array(X_list[i])
     X_list[i] = numpy.reshape(X_list[i], (4, 1))
 
+for j in range(len(y_list)):
+    y_list[j] = numpy.array(y_list[j])
+    y_list[j] = numpy.reshape(y_list[j], (3, 1))
+    y_list[j] = y_list[j].tolist()
+
 X_train, X_test, y_train, y_test = train_test_split(X_list, y_list, test_size=0.2, random_state=41)
 
 # Network and associated parameters
 learningRate = 0.5
-numNeuronsPerLayer = [5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3]
-actFunctions = [SigmoidActivation(), SigmoidActivation(), SigmoidActivation(), SigmoidActivation(), SigmoidActivation(), SigmoidActivation(), SigmoidActivation(), SigmoidActivation(), SigmoidActivation(), SigmoidActivation(), SigmoidActivation()]
+numNeuronsPerLayer = [5, 3]
+actFunctions = [SigmoidActivation(), SigmoidActivation()]
 n1 = Network(4, numNeuronsPerLayer, actFunctions)
 
 backprop = BackPropagationMethods()
-backprop.BatchGradientDescent(n1, X_train, y_train, learningRate, 250)
+backprop.StochasticGradientDescent(n1, X_train, y_train, learningRate, 200)
 
 num_samples = 0
 num_correct_predictions = 0
 for i in range(len(X_test)):
     result = n1.Output(X_test[i])
-    answer_index = None
-    predicted_answer_index = None
-    closest_distance = None
+    print(X_test[i])
+    print(result)
+    print(y_test[i])
+    # answer_max = max(y_test[i])
+    # answer_index = y_test[i].index(answer_max)
+    # result_max = max(result)
+    # predicted_answer_index = result.index(result_max)
+    # closest_distance = None
+    _max = -1
+    max_dex = -1
+    ans_max = -1
+    ans_max_dex = -1
     for j in range(len(result)):
-        distance = abs(result[j][0] - 1)
-        if y_test[i][j] == 1:
-            answer_index = j
-        if predicted_answer_index is None or closest_distance > distance:
-            predicted_answer_index = j
-            closest_distance = distance
-    if predicted_answer_index == answer_index:
+        if result[j][0] > _max:
+            _max = result[j][0]
+            max_dex = j
+        if y_test[i][j][0] > ans_max:
+            ans_max = y_test[i][j][0]
+            ans_max_dex = j
+        # if predicted_answer_index is None or closest_distance > distance:
+        #     predicted_answer_index = j
+        #     closest_distance = distance
+    if max_dex == ans_max_dex:
         num_correct_predictions += 1
     num_samples += 1
 
