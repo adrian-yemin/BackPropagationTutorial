@@ -4,7 +4,7 @@ from SigmoidActivation import SigmoidActivation
 import math
 
 
-class Neuron():
+class Neuron:
     def __init__(self, numInputs, actFunction):
         self.Weights = numpy.empty(numInputs, dtype=float)  # Define the weights for the neuron
         self.WeightNum = len(self.Weights)  # Variable to check the number of connections(weights) the neuron has
@@ -18,7 +18,7 @@ class Neuron():
         z = 0.0
         self.APrime = 0.0
         for i in range(0, self.WeightNum):  # Sum the weighted inputs
-            z += input[i] * self.Weights[i]
+            z += input[i][0] * self.Weights[i]
         z += self.Bias
         self.A = self.ActivationFunction.Output(z)  # Apply the activation function
         self.APrime = self.ActivationFunction.OutputPrime(z)  # Compute derivative

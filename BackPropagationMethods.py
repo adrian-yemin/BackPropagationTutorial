@@ -23,6 +23,8 @@ class BackPropagationMethods():
 
     @staticmethod
     def BatchGradientDescent(net, inputs, targets, learningRate, numIterations):
+        num_correct = 0
+        num_total = 0
         trainingSampleNum = len(inputs)  # Determine how many samples are in the training set
         for currentIteration in range(0, numIterations):  # Train for a fixed number of iterations
             holderJW = BackPropagationMethods.GenerateEmptyJWHolder(net)
@@ -31,19 +33,20 @@ class BackPropagationMethods():
                 currentInput = inputs[currentSample]  # Get the current training input to the network
                 currentTarget = targets[currentSample]  # Get the target (ideal) output of the network
                 output = net.Output(currentInput)
+                # if
                 deltas = BackPropagationMethods.ComputeAllDeltas(net, output, currentTarget)
-                # TO DO: Compute weight partial derivative for the current sample and store it using the SumHolders
+                # Compute weight partial derivative for the current sample and store it using the SumHolders
                 # method
                 currentJW = BackPropagationMethods.GenerateEmptyJWHolder(net)
                 partials = BackPropagationMethods.CalculateWeights(net, currentInput, deltas, currentJW)
                 BackPropagationMethods.SumHolders(partials, holderJW)
-                # TO DO: Compute bias partial derivative for the current sample and store it using the SumHolders method
+                # Compute bias partial derivative for the current sample and store it using the SumHolders method
                 currentJB = deltas
                 BackPropagationMethods.SumHolders(currentJB, holderJB)
             BackPropagationMethods.ApplyAverageToHolders(trainingSampleNum, holderJW)
             BackPropagationMethods.ApplyAverageToHolders(trainingSampleNum, holderJB)
-            # TO DO: Apply holderJW to update the weights of the network
-            # TO DO: Apply holderJB to update the biases of the network
+            # Apply holderJW to update the weights of the network
+            # Apply holderJB to update the biases of the network
             for i in range(0, net.LayerNum):
                 currentLayer = net.Layers[i]
                 for j in range(0, currentLayer.NumNeurons):
@@ -97,7 +100,7 @@ class BackPropagationMethods():
                 aPrime = net.Layers[net.LayerNum - 1].OutputPrime()
                 for i in range(len(aPrime)):
                     for j in range(len(aPrime[i])):
-                        aPrime[i][j] *= -(y[i] - output[i][j])
+                        aPrime[i][j] *= -(y[i][j] - output[i][j])
                 delta.append(aPrime)
                 # Don't update the delta index for the first time
             else:
@@ -119,7 +122,12 @@ class BackPropagationMethods():
                 currentNeuron = currentLayer.NeuronArray[j]
                 for i in range(0, currentNeuron.WeightNum):
                     output = previousLayer.NeuronArray[i].A if k > 0 else input[i]
-                    currentNeuron.Weights[i] -= deltas[k][j][0] * output * learningRate
+                    gradient = deltas[k][j][0] * output * learningRate
+                    # if gradient < -1:
+                    #     gradient = -1
+                    # elif gradient > 1:
+                    #     gradient = 1
+                    currentNeuron.Weights[i] -= gradient
 
     @staticmethod
     def CalculateWeights(net, input, deltas, currentJW):
