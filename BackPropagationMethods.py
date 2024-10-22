@@ -122,7 +122,12 @@ class BackPropagationMethods():
                 currentNeuron = currentLayer.NeuronArray[j]
                 for i in range(0, currentNeuron.WeightNum):
                     output = previousLayer.NeuronArray[i].A if k > 0 else input[i]
-                    currentNeuron.Weights[i] -= deltas[k][j][0] * output * learningRate
+                    gradient = deltas[k][j][0] * output * learningRate
+                    # if gradient < -1:
+                    #     gradient = -1
+                    # elif gradient > 1:
+                    #     gradient = 1
+                    currentNeuron.Weights[i] -= gradient
 
     @staticmethod
     def CalculateWeights(net, input, deltas, currentJW):

@@ -26,43 +26,35 @@ for j in range(len(y_list)):
 X_train, X_test, y_train, y_test = train_test_split(X_list, y_list, test_size=0.2, random_state=41)
 
 # Network and associated parameters
-learningRate = 0.5
+learningRate = 0.05
 numNeuronsPerLayer = [5, 3]
 actFunctions = [SigmoidActivation(), SigmoidActivation()]
 n1 = Network(4, numNeuronsPerLayer, actFunctions)
 
 backprop = BackPropagationMethods()
-backprop.StochasticGradientDescent(n1, X_train, y_train, learningRate, 200)
-
 num_samples = 0
 num_correct_predictions = 0
-for i in range(len(X_test)):
-    result = n1.Output(X_test[i])
-    print(X_test[i])
-    print(result)
-    print(y_test[i])
-    # answer_max = max(y_test[i])
-    # answer_index = y_test[i].index(answer_max)
-    # result_max = max(result)
-    # predicted_answer_index = result.index(result_max)
-    # closest_distance = None
-    _max = -1
-    max_dex = -1
-    ans_max = -1
-    ans_max_dex = -1
-    for j in range(len(result)):
-        if result[j][0] > _max:
-            _max = result[j][0]
-            max_dex = j
-        if y_test[i][j][0] > ans_max:
-            ans_max = y_test[i][j][0]
-            ans_max_dex = j
-        # if predicted_answer_index is None or closest_distance > distance:
-        #     predicted_answer_index = j
-        #     closest_distance = distance
-    if max_dex == ans_max_dex:
-        num_correct_predictions += 1
-    num_samples += 1
+for epoch in range(100):
+    backprop.StochasticGradientDescent(n1, X_train, y_train, learningRate, 100)
+    for i in range(len(X_test)):
+        result = n1.Output(X_test[i])
+        print(X_test[i])
+        print(result)
+        print(y_test[i])
+        _max = -1
+        max_dex = -1
+        ans_max = -1
+        ans_max_dex = -1
+        for j in range(len(result)):
+            if result[j][0] > _max:
+                _max = result[j][0]
+                max_dex = j
+            if y_test[i][j][0] > ans_max:
+                ans_max = y_test[i][j][0]
+                ans_max_dex = j
+        if max_dex == ans_max_dex:
+            num_correct_predictions += 1
+        num_samples += 1
 
 percent_accuracy = (num_correct_predictions/num_samples)*100
 print(f"The accuracy of the neural network is: {percent_accuracy}%")
